@@ -16,8 +16,8 @@ let parse filename =
     parse_line [] []
 
 let diff list1 list2 =
-    let list1_sorted = List.sort (fun x y -> if x < y then -1 else 1) list1 in
-    let list2_sorted = List.sort (fun x y -> if x < y then -1 else 1) list2 in
+    let list1_sorted = List.sort compare list1 in
+    let list2_sorted = List.sort compare list2 in
     let rec calc_diff acc a b =
         match (a, b) with
         | (x :: rest1, y :: rest2) ->
@@ -29,12 +29,22 @@ let diff list1 list2 =
     let d = calc_diff 0 list1_sorted list2_sorted in
     print_endline (string_of_int d)
 
+let occurences x list =
+    let occ = List.filter (fun v -> v == x) list in
+    List.length occ
+
 let part1 = fun input ->
     let (list1, list2) = parse input in
     diff list1 list2
 
+let part2 = fun input ->
+    let (list1, list2) = parse input in
+    let multlist = List.map (fun v -> v * (occurences v list2)) list1 in
+    let sum = List.fold_left ( + ) 0 multlist in
+    print_endline (string_of_int sum)
+
 let run  = fun input part ->
     match part with
     | 1 -> part1 input
-    | 2 -> failwith "part 2 not yet implemented"
+    | 2 -> part2 input
     | _ -> failwith "invalid part"
