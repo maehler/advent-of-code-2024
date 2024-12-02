@@ -20,14 +20,14 @@ let rec is_safe_decr report =
     | a :: b :: rest ->
             if a - b >= 1 && a - b <= 3 then is_safe_decr (b :: rest) else false
     | _ :: [] -> true
-    | [] -> true
+    | [] -> assert false
 
 let rec is_safe_incr report =
     match report with
     | a :: b :: rest ->
             if b - a >= 1 && b - a <= 3 then is_safe_incr (b :: rest) else false
     | _ :: [] -> true
-    | [] -> true
+    | [] -> assert false
 
 let is_safe report =
     match report with
@@ -36,7 +36,7 @@ let is_safe report =
             else if is_safe_decr report then true
             else false
     | _ :: [] -> true
-    | [] -> true
+    | [] -> assert false
 
 let part1 input =
     let reports = parse input in
