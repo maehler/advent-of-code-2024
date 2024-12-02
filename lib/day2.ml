@@ -31,9 +31,9 @@ let rec is_safe_incr report =
 
 let is_safe report =
     match report with
-    | a :: b :: _ ->
-            if b > a then is_safe_incr report
-            else if b < a then is_safe_decr report
+    | _ :: _ :: _ ->
+            if is_safe_incr report then true
+            else if is_safe_decr report then true
             else false
     | _ :: [] -> true
     | [] -> true
