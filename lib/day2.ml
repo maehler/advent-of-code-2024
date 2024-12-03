@@ -44,8 +44,26 @@ let part1 input =
     let count = List.fold_left (fun acc x -> if x then acc + 1 else acc) 0 valid in
     Printf.printf "%d\n" count
 
+let dampened_combos report =
+    let rec combos prev next acc =
+        match next with
+        | [] -> acc
+        | hd :: rest -> combos (hd :: prev) rest (List.append (List.rev prev) rest :: acc)
+    in
+    report :: combos [] report []
+
+let is_safe_dampened report =
+    let combos = dampened_combos report in
+    let safe_combos = List.map is_safe combos in
+    List.fold_left (||) false safe_combos
+
+let part2 input = 
+    let reports = parse input in
+    let filtered_reports = List.filter is_safe_dampened reports in
+    List.length filtered_reports |> Printf.printf "%d\n"
+
 let run input part =
     match part with
     | 1 -> part1 input
-    | 2 -> failwith "not implemented yet"
+    | 2 -> part2 input
     | _ -> failwith "invalid part"
