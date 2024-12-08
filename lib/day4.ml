@@ -43,10 +43,47 @@ let count_xmas board =
     List.filter ~f:(fun w -> (String.compare w "XMAS") = 0) words |>
     List.length
 
+let count_x_mas board = 
+    let get_cross start = 
+        let (x, y) = start in
+        let offsets1 = [(-1, -1); (0, 0); (1, 1)] in
+        let offsets2 = [(1, -1); (0, 0); (-1, 1)] in
+        let first = List.map offsets1 ~f:(fun (dx, dy) ->
+            let pos = (x + dx, y + dy) in
+            match Map.find board pos with
+            | Some c -> c
+            | None -> '.'
+        ) |> String.of_list in
+        let second = List.map offsets2 ~f:(fun (dx, dy) ->
+            let pos = (x + dx, y + dy) in
+            match Map.find board pos with
+            | Some c -> c
+            | None -> '.'
+        ) |> String.of_list in
+        (first, second)
+    in
+    let crosses = Map.fold board ~init:[] ~f:(fun ~key:(x, y) ~data:c acc ->
+        match c with
+        | 'A' -> (get_cross (x, y)) :: acc
+        | _ -> acc
+    ) in
+    List.filter crosses ~f:(fun (w1, w2) ->
+        match w1, w2 with
+        | "SAM", "SAM" -> true
+        | "SAM", "MAS" -> true
+        | "MAS", "SAM" -> true
+        | "MAS", "MAS" -> true
+        | _ -> false
+    ) |> List.length
+
 let part1 filename =
     read filename |> parse_board |> count_xmas |> Printf.printf "%d\n"
+
+let part2 filename =
+    read filename |> parse_board |> count_x_mas |> Printf.printf "%d\n"
 
 let run filename part =
     match part with
     | 1 -> part1 filename
+    | 2 -> part2 filename
     | _ -> failwith "invalid part"
