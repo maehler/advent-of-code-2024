@@ -38,6 +38,7 @@ let () =
     | 1 -> Aoc.Day1.run !input_file !part
     | 2 -> Aoc.Day2.run !input_file !part
     | 3 -> Aoc.Day3.run !input_file !part
+    | 4 -> Aoc.Day4.run !input_file !part
     | d ->
             Printf.eprintf "day %d not yet implemented\n" d;
             exit 1
